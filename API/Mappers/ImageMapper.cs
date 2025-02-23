@@ -28,6 +28,7 @@ public static class ImageMapper
     public static List<ImageResponseDTO> MapToDto(List<DomImage> images)
     {
         return images.Select(image => image.MapToDto()).ToList();
+        
     }
 
     public static List<DomImage> MapToDomain(this List<Image> Images)

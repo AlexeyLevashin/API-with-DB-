@@ -41,7 +41,7 @@ public static class PostMapper
             CreatedAt = post.CreatedAt,
             UpdatedAt = post.UpdatedAt,
             IsPublished = post.IsPublished,
-            // Images = post.Images.MapToDto() 
+            Images = post.Images.MapToDto() 
         };
     }
     

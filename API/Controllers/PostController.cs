@@ -51,7 +51,7 @@ using Microsoft.AspNetCore.Authorization;
         }
 
         [Authorize(Roles = "Author")]
-        [HttpPost("/api/posts/{postId:int}/images")]
+        [HttpPost("{postId:int}/images")]
         public async Task<IActionResult> AddImageToPost(int postId, IFormFile image)
         {
             await using var stream = image.OpenReadStream();
@@ -60,7 +60,7 @@ using Microsoft.AspNetCore.Authorization;
         }
 
         [Authorize(Roles = "Author")]
-        [HttpDelete("/api/posts/{postId:int}/images/{imageId:int}")]
+        [HttpDelete("{postId:int}/images/{imageId:int}")]
         public async Task<IActionResult> DeleteImage(int postId, int imageId)
         {
             await postService.DeleteImageFromPost(postId, imageId, UserId);

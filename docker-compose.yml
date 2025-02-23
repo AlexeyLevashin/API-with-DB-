@@ -1,4 +1,12 @@
 ﻿services:
+  web:
+    build:
+      context: ./API 
+      dockerfile: Dockerfile что такое 
+    ports:
+      - "80:80"
+    depends_on:
+      - database
   database:
     image: postgres:16
     restart: always
@@ -16,6 +24,45 @@
 networks:
   backend:
     driver: bridge
+minio:
+  image: minio/minio
+  env_file:
+    - .env
+  ports:
+    - "9000:9000"
+    - "9001:9001"
+  volumes:
+    - datastore:/data
+  networks:
+    - backend
+  command: server --console-address ":9001" /data
+  createbuckets:
+    image: minio/mc
+    networks:
+      - backend
+    env_file:
+      - .env
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+      /usr/bin/mc alias set minio http://minio:9000 ${MINIO_ACCESS_KEY} ${MINIO_SECRET_KEY};
+      /usr/bin/mc mb minio/${MINIO_BUCKET};
+      /usr/bin/mc policy set public minio/${MINIO_BUCKET};
+      exit 0;
+      "
+  nginx:
+    image: 'jc21/nginx-proxy-manager:latest'
+    restart: unless-stopped
+    volumes:
+      - ./data:/data
+      - ./letsencrypt:/etc/letsencrypt
+    ports:
+      - '80:80'
+      - '443:443'
+      - '81:81'
+    networks:
+      - backend
 
 volumes:
   database-pg:

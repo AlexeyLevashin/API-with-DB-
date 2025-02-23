@@ -1,4 +1,6 @@
 using System.Reflection;
+using FirstRestAPI.Services.Minio;
+using FirstRestAPI.Services.Minio.Interfaces;
 using Infrastructure.Models.InterfacesRepositories;
 using Infrastructure.Repositories;
 using FluentMigrator.Runner;
@@ -29,6 +31,13 @@ public static class InfrastructureExtensions
             return services;
         }
         
+        public static IServiceCollection AddMinio(this IServiceCollection services)
+        {
+            services.AddScoped<IMinioService, MinioService>();
+            services.AddScoped<IMinioSettings, MinioSettings>();
+            return services;
+        }
+
         public static IServiceCollection AddMigrations(this IServiceCollection services, string connectionString)
         {
             services.AddFluentMigratorCore().ConfigureRunner(rb =>
